@@ -4,7 +4,7 @@ const cardSymbols = [
 	'fa-anchor',
 	'fa-bolt',
 	'fa-cube',
-	'fa-diamond',
+	'fa-bomb',
 	'fa-leaf',
 	'fa-bicycle'
 ];
@@ -60,6 +60,24 @@ function createDeck() {
  *   - add each card's HTML to the page
  */
 
+ function DisplayDeck(){
+
+ 	//get link to board
+ 	let board = document.querySelector('.deck');
+
+ 	//create deck
+ 	let deck = createDeck();
+ 	// deck.forEach(function(carda){
+ 	// 	board.appendChild(carda);
+ 	// });
+
+ 	for (var i = 0; i < deck.length; i++) {
+ 		board.appendChild(deck[i]);
+ 	}
+
+
+ }
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -76,6 +94,9 @@ function shuffle(array) {
     return array;
 }
 
+
+//load game
+DisplayDeck();
 
 /*
  * set up the event listener for a card. If a card is clicked:
