@@ -1,7 +1,57 @@
+const cardSymbols = [
+	'fa-diamond',
+	'fa-paper-plane-o',
+	'fa-anchor',
+	'fa-bolt',
+	'fa-cube',
+	'fa-diamond',
+	'fa-leaf',
+	'fa-bicycle'
+];
+
+const totalMatches = cardSymbols.length;
+const totalCards = totalMatches * 2; // This must be set to an even number
+
 /*
  * Create a list that holds all of your cards
  */
 
+function createDeck() {
+	let deck = [];
+	let symbolPosition = 0;
+
+	//build initial cards without symbols
+	for (let i = 0; i < totalCards; i++) {
+		
+		//create card
+		const card = document.createElement('li');
+		card.setAttribute('class','card');
+		
+		// create card symbol
+		const cardSymbol = document.createElement('i');
+		card.appendChild(cardSymbol);
+		deck.push(card);
+	}
+
+	// add symbols to cards
+	let currentChild;
+	deck.forEach(function(card){
+		currentChild = card.firstElementChild;
+		currentChild.setAttribute('class', 'fa ' + cardSymbols[symbolPosition] );
+		symbolPosition++;
+
+		if(symbolPosition === cardSymbols.length){
+			symbolPosition = 0;
+		}
+	});
+
+	//shuffle cards
+	shuffle(deck);
+
+	
+	return deck;
+
+};
 
 /*
  * Display the cards on the page
@@ -9,6 +59,7 @@
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
