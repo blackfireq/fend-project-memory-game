@@ -11,7 +11,9 @@ const cardSymbols = [
 
 const totalMatches = cardSymbols.length;
 const totalCards = totalMatches * 2; // This must be set to an even number
-
+let currentMatches = 0;
+let numOfMoves = 0;
+const moveCounter = document.querySelector('.moves');
 /*
  * Create a list that holds all of your cards
  */
@@ -60,28 +62,21 @@ function createDeck() {
  *   - add each card's HTML to the page
  */
 
- function DisplayDeck(){
-
+function DisplayDeck(){
  	//get link to board
  	let board = document.querySelector('.deck');
 
  	//create deck
  	let deck = createDeck();
- 	// deck.forEach(function(carda){
- 	// 	board.appendChild(carda);
- 	// });
-
- 	for (var i = 0; i < deck.length; i++) {
- 		board.appendChild(deck[i]);
- 	}
-
-
+ 	deck.forEach(function(card){
+ 		board.appendChild(card);
+ 	});
  }
 
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+    let currentIndex = array.length, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
@@ -108,3 +103,89 @@ DisplayDeck();
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+let openCards = [];
+let currentCard;
+document.querySelector('.deck').addEventListener('click', function(event){ 
+ 	//highlight card
+ 	setCurrentCard(event);
+
+ 	toggleCard(currentCard);
+
+ 	//add card to list
+ 	openCards.push(currentCard);
+ 	
+ 	// check if card is the second card, if so check if it matches to firstcard
+ 	if (openCards.length === 2) {
+ 		if(isMatch()){
+ 			matchCards();
+ 			currentMatches++;
+ 		} else {
+ 			for (var i = 0; i < openCards.length; i++) {
+ 				toggleCard(openCards[i]);
+ 			}
+ 		}
+
+ 		//update number of moves
+ 		updateNumOfMoves();
+
+ 		//reset cards
+
+
+ 		//clear card holder
+ 		openCards = [];
+ 	} 
+
+ 	//check if game is over
+ 	isGameOver();
+
+ });
+
+function toggleCard(card){
+ 	card.classList.toggle('open');
+ 	card.classList.toggle('show');
+ 
+ }
+ 
+function isMatch(){
+	console.log(openCards[0].firstElementChild.classList[1] +' vs '+ openCards[1].firstElementChild.classList[1]);
+	if ( openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]){
+		console.log('its a match');
+		return true;
+	}
+	return false;
+}
+
+function matchCards(){
+	for (var i = 0; i < openCards.length; i++) {
+		toggleCard(openCards[i]);
+		openCards[i].classList.add('match');
+
+	}
+}
+
+function updateNumOfMoves(){
+	numOfMoves++;
+ 	moveCounter.textContent = numOfMoves;
+}
+
+function isGameOver(){
+	if(currentMatches >= totalMatches){
+ 		console.log('Game is over!');
+ 		return true;
+ 	}
+ 	return false;
+}
+
+function setCurrentCard(event){
+
+	if (event.target.nodeName === 'LI'){
+ 		console.log('parent');
+ 		currentCard = event.target;
+ 		
+ 	} else if (event.target.nodeName == 'I'){
+ 		console.log('child');
+ 		currentCard = event.target.parentElement;
+ 	
+ 	}
+}
