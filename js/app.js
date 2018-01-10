@@ -1,15 +1,4 @@
-const cardSymbols = [
-	'fa-diamond',
-	'fa-paper-plane-o',
-	'fa-anchor',
-	'fa-bolt',
-	'fa-cube',
-	'fa-bomb',
-	'fa-leaf',
-	'fa-bicycle'
-];
-
-const totalMatches = cardSymbols.length;
+const totalMatches = 8;
 const totalCards = totalMatches * 2; // This must be set to an even number
 let currentMatches = 0;
 let numOfMoves = 0;
@@ -20,7 +9,6 @@ const moveCounter = document.querySelector('.moves');
 
 function createDeck() {
 	let deck = [];
-	let symbolPosition = 0;
 
 	//build initial cards without symbols
 	for (let i = 0; i < totalCards; i++) {
@@ -36,16 +24,7 @@ function createDeck() {
 	}
 
 	// add symbols to cards
-	let currentChild;
-	deck.forEach(function(card){
-		currentChild = card.firstElementChild;
-		currentChild.setAttribute('class', 'fa ' + cardSymbols[symbolPosition] );
-		symbolPosition++;
-
-		if(symbolPosition === cardSymbols.length){
-			symbolPosition = 0;
-		}
-	});
+	setSymbols(deck);
 
 	//shuffle cards
 	shuffle(deck);
@@ -140,6 +119,33 @@ document.querySelector('.deck').addEventListener('click', function(event){
  	isGameOver();
 
  });
+
+function setSymbols(cards){
+	const cardSymbols = [
+		'fa-diamond',
+		'fa-paper-plane-o',
+		'fa-anchor',
+		'fa-bolt',
+		'fa-cube',
+		'fa-bomb',
+		'fa-leaf',
+		'fa-bicycle'
+	];
+
+	let symbolPosition = 0;
+
+	let currentChild;
+	cards.forEach(function(card){
+		currentChild = card.firstElementChild;
+		currentChild.setAttribute('class', 'fa ' + cardSymbols[symbolPosition] );
+		symbolPosition++;
+
+		if(symbolPosition === cardSymbols.length){
+			symbolPosition = 0;
+		}
+	});
+	return cards;
+}
 
 function toggleCard(card){
  	card.classList.toggle('open');
