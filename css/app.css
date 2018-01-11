@@ -66,7 +66,6 @@ h1 {
 }
 
 .deck .card.open {
-    transform: rotateY(0);
     background: #02b3e4;
     cursor: default;
 }
@@ -79,6 +78,16 @@ h1 {
     cursor: default;
     background: #02ccba;
     font-size: 33px;
+}
+
+.flip-card{
+    -webkit-transition: .25s;
+       -moz-transition: .25s;
+        -ms-transition: .25s;
+         -o-transition: .25s;
+            transition: .25s;
+    -webkit-transform: rotateY(360deg);
+            transform: rotateY(360deg);
 }
 
 /*
@@ -107,3 +116,22 @@ h1 {
     float: right;
     cursor: pointer;
 }
+
+/*
+ * Styling in guard screen
+ */
+
+ .guard-screen {
+   width: 100%;
+   height: 660px;
+   position: absolute;
+   visibility: hidden;
+ }
+
+.show-guard {
+  visibility: visible !important;
+}
+
+/*
+ * Styling for end screen
+ */

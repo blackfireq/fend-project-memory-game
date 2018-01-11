@@ -3,6 +3,8 @@ const totalCards = totalMatches * 2; // This must be set to an even number
 let currentMatches = 0;
 let numOfMoves = 0;
 const moveCounter = document.querySelector('.moves');
+let openCards = [];
+let guard = document.querySelector('.guard-screen');
 /*
  * Create a list that holds all of your cards
  */
@@ -12,11 +14,12 @@ function createDeck() {
 
 	//build initial cards without symbols
 	for (let i = 0; i < totalCards; i++) {
-		
+
 		//create card
 		const card = document.createElement('li');
 		card.setAttribute('class','card');
-		
+		card.setAttribute('id','card' + i);
+
 		// create card symbol
 		const cardSymbol = document.createElement('i');
 		card.appendChild(cardSymbol);
@@ -29,7 +32,7 @@ function createDeck() {
 	//shuffle cards
 	shuffle(deck);
 
-	
+
 	return deck;
 
 };
@@ -83,42 +86,41 @@ DisplayDeck();
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-let openCards = [];
-let currentCard;
-document.querySelector('.deck').addEventListener('click', function(event){ 
- 	//highlight card
- 	setCurrentCard(event);
+document.querySelector('.deck').addEventListener('click', function(event){
+	if(event.target.nodeName === 'LI' || event.target.nodeName === 'I'){
+		//add card to list
+	 	let currentCard = setCurrentCard(event);
+	 	addCardToList(currentCard);
 
- 	toggleCard(currentCard);
+		//reveal card
+	 	toggleCard(currentCard);
 
- 	//add card to list
- 	openCards.push(currentCard);
- 	
- 	// check if card is the second card, if so check if it matches to firstcard
- 	if (openCards.length === 2) {
- 		if(isMatch()){
- 			matchCards();
- 			currentMatches++;
- 		} else {
- 			for (var i = 0; i < openCards.length; i++) {
- 				toggleCard(openCards[i]);
- 			}
- 		}
+	 	// check if card it's the second card, if so check if it matches to firstcard
+	 	if (openCards.length === 2) {
+			guard.classList.add('show-guard');
 
- 		//update number of moves
- 		updateNumOfMoves();
+			setTimeout(function (){
+				isMatch() ? correctMatch() : incorrectMatch() ;
 
- 		//reset cards
+				//update number of moves
+		 		updateNumOfMoves();
 
+		 		//clear card holder
+		 		openCards = [];
+			}, 600);
 
- 		//clear card holder
- 		openCards = [];
- 	} 
-
- 	//check if game is over
- 	isGameOver();
-
+			setTimeout(function(){guard.classList.remove('show-guard');},600);
+	 	}
+	}
  });
+
+// TODO: reset gameboard
+
+// TODO: check if game is over. display end screen
+
+function addCardToList(card){
+	 openCards.push(card);
+ }
 
 function setSymbols(cards){
 	const cardSymbols = [
@@ -148,26 +150,32 @@ function setSymbols(cards){
 }
 
 function toggleCard(card){
+	card.classList.toggle('flip-card');
  	card.classList.toggle('open');
  	card.classList.toggle('show');
- 
+
  }
- 
+
+function incorrectMatch(){
+	for (let i = 0; i < openCards.length; i++) {
+		toggleCard(openCards[i]);
+	}
+}
+
 function isMatch(){
-	console.log(openCards[0].firstElementChild.classList[1] +' vs '+ openCards[1].firstElementChild.classList[1]);
-	if ( openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]){
-		console.log('its a match');
+	if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]){
 		return true;
 	}
 	return false;
 }
 
-function matchCards(){
-	for (var i = 0; i < openCards.length; i++) {
-		toggleCard(openCards[i]);
+function correctMatch(){
+	for (let i = 0; i < openCards.length; i++) {
+		openCards[i].classList.remove('open');
 		openCards[i].classList.add('match');
 
 	}
+	currentMatches++;
 }
 
 function updateNumOfMoves(){
@@ -176,9 +184,9 @@ function updateNumOfMoves(){
 }
 
 function isGameOver(){
-	if(currentMatches >= totalMatches){
- 		console.log('Game is over!');
+	if(currentMatches === totalMatches){
  		return true;
+ 	} else {
  	}
  	return false;
 }
@@ -186,12 +194,10 @@ function isGameOver(){
 function setCurrentCard(event){
 
 	if (event.target.nodeName === 'LI'){
- 		console.log('parent');
- 		currentCard = event.target;
- 		
+ 		return event.target;
+
  	} else if (event.target.nodeName == 'I'){
- 		console.log('child');
- 		currentCard = event.target.parentElement;
- 	
+ 		return event.target.parentElement;
+
  	}
 }
