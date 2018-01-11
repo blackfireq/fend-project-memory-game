@@ -104,7 +104,7 @@ document.querySelector('.deck').addEventListener('click', function(event){
 
 				//update number of moves
 		 		updateNumOfMoves(1);
-
+				setStarRating();
 		 		//clear card holder
 		 		openCards = [];
 			}, 600);
@@ -118,7 +118,6 @@ document.querySelector('.restart').addEventListener('click', function(event){
 	resetGame();
 });
 
-// TODO: reset gameboard
 function resetGame(){
 	//clear deck of cards
 	const deck = document.querySelector('.deck');
@@ -131,6 +130,22 @@ function resetGame(){
 
 	//setup deck
 	displayDeck();
+}
+
+function setStarRating(){
+	const stars = document.querySelectorAll('.stars i');
+
+	switch (numOfMoves){
+
+		case 10 :
+				stars[2].className = 'fa fa-star-o';
+				break;
+		case 14 :
+				stars[1].className = 'fa fa-star-o';
+				break;
+		case 18 :
+				stars[0].className = 'fa fa-star-o';
+	}
 }
 
 // TODO: check if game is over. display end screen
