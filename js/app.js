@@ -44,7 +44,7 @@ function createDeck() {
  *   - add each card's HTML to the page
  */
 
-function DisplayDeck(){
+function displayDeck(){
  	//get link to board
  	let board = document.querySelector('.deck');
 
@@ -73,7 +73,7 @@ function shuffle(array) {
 
 
 //load game
-DisplayDeck();
+displayDeck();
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -103,7 +103,7 @@ document.querySelector('.deck').addEventListener('click', function(event){
 				isMatch() ? correctMatch() : incorrectMatch() ;
 
 				//update number of moves
-		 		updateNumOfMoves();
+		 		updateNumOfMoves(1);
 
 		 		//clear card holder
 		 		openCards = [];
@@ -114,7 +114,24 @@ document.querySelector('.deck').addEventListener('click', function(event){
 	}
  });
 
+document.querySelector('.restart').addEventListener('click', function(event){
+	resetGame();
+});
+
 // TODO: reset gameboard
+function resetGame(){
+	//clear deck of cards
+	const deck = document.querySelector('.deck');
+	for (var i = 0; i < totalCards; i++) {
+		deck.firstElementChild.remove();
+	}
+
+	//set moves to 0
+	updateNumOfMoves(0);
+
+	//setup deck
+	displayDeck();
+}
 
 // TODO: check if game is over. display end screen
 
@@ -178,8 +195,8 @@ function correctMatch(){
 	currentMatches++;
 }
 
-function updateNumOfMoves(){
-	numOfMoves++;
+function updateNumOfMoves(num){
+	num !== 0 ? numOfMoves += num : numOfMoves = num ;
  	moveCounter.textContent = numOfMoves;
 }
 
