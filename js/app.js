@@ -2,9 +2,11 @@ const totalMatches = 8;
 const totalCards = totalMatches * 2; // This must be set to an even number
 let currentMatches = 0;
 let numOfMoves = 0;
+let currentStars = 3;
 const moveCounter = document.querySelector('.moves');
 let openCards = [];
 let guard = document.querySelector('.guard-screen');
+
 /*
  * Create a list that holds all of your cards
  */
@@ -86,38 +88,6 @@ displayDeck();
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-document.querySelector('.deck').addEventListener('click', function(event){
-	if(event.target.nodeName === 'LI' || event.target.nodeName === 'I'){
-		//add card to list
-	 	let currentCard = setCurrentCard(event);
-	 	addCardToList(currentCard);
-
-		//reveal card
-	 	toggleCard(currentCard);
-
-	 	// check if card it's the second card, if so check if it matches to firstcard
-	 	if (openCards.length === 2) {
-			guard.classList.add('show-guard');
-
-			setTimeout(function (){
-				isMatch() ? correctMatch() : incorrectMatch() ;
-
-				//update number of moves
-		 		updateNumOfMoves(1);
-				setStarRating();
-		 		//clear card holder
-		 		openCards = [];
-			}, 600);
-
-			setTimeout(function(){guard.classList.remove('show-guard');},600);
-	 	}
-	}
- });
-
-document.querySelector('.restart').addEventListener('click', function(event){
-	resetGame();
-});
-
 function resetGame(){
 	//clear deck of cards
 	const deck = document.querySelector('.deck');
@@ -132,23 +102,39 @@ function resetGame(){
 	displayDeck();
 }
 
-function setStarRating(){
+function updateStarRating(){
 	const stars = document.querySelectorAll('.stars i');
 
 	switch (numOfMoves){
 
 		case 10 :
 				stars[2].className = 'fa fa-star-o';
+				currentStars--;
 				break;
 		case 14 :
 				stars[1].className = 'fa fa-star-o';
+				currentStars--;
 				break;
 		case 18 :
 				stars[0].className = 'fa fa-star-o';
+				currentStars--;
 	}
 }
 
-// TODO: check if game is over. display end screen
+function endGame(){
+	const endGameScreen = document.querySelector('.end-game-screen');
+	const endGameReplay = document.querySelector('.play-again');
+	const endGameMoves = document.querySelector('.moves-results');
+	const endGameStars = document.querySelector('.stars-results');
+
+	//set Moves
+	endGameMoves.textContent = numOfMoves;
+	//set Stars
+	endGameStars.textContent = currentStars;
+	//show end game screen
+	endGameScreen.classList.toggle('end-game-show');
+
+}
 
 function addCardToList(card){
 	 openCards.push(card);
@@ -233,3 +219,44 @@ function setCurrentCard(event){
 
  	}
 }
+
+document.querySelector('.deck').addEventListener('click', function(event){
+	if(event.target.nodeName === 'LI' || event.target.nodeName === 'I'){
+		//add card to list
+	 	let currentCard = setCurrentCard(event);
+	 	addCardToList(currentCard);
+
+		//reveal card
+	 	toggleCard(currentCard);
+
+	 	// check if card it's the second card, if so check if it matches to firstcard
+	 	if (openCards.length === 2) {
+			guard.classList.add('show-guard');
+
+			setTimeout(function (){
+				isMatch() ? correctMatch() : incorrectMatch() ;
+
+				//update number of moves
+		 		updateNumOfMoves(1);
+				updateStarRating();
+				//check if game is won
+				if (isGameOver()){ endGame();}
+		 		//clear card holder
+		 		openCards = [];
+			}, 600);
+
+			setTimeout(function(){guard.classList.remove('show-guard');},600);
+	 	}
+
+	}
+ });
+
+document.querySelector('.restart').addEventListener('click', function(event){
+	resetGame();
+});
+
+document.querySelector('.play-again').addEventListener('click', function(){
+	const endGameScreen = document.querySelector('.end-game-screen');
+	endGameScreen.classList.toggle('end-game-show');
+	resetGame();
+})
