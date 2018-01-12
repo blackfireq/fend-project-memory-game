@@ -95,8 +95,17 @@ function resetGame(){
 		deck.firstElementChild.remove();
 	}
 
-	//set moves to 0
+	//reset moves
 	updateNumOfMoves(0);
+
+	//reset stars
+	const stars = document.querySelectorAll('.stars i');
+	for (var i = 0; i < stars.length; i++) {
+		stars[i].className = 'fa fa-star';
+	}
+
+	//reset current current matches
+	currentMatches = 0;
 
 	//setup deck
 	displayDeck();
@@ -107,21 +116,19 @@ function updateStarRating(){
 
 	switch (numOfMoves){
 
-		case 10 :
+		case 12 :
 				stars[2].className = 'fa fa-star-o';
 				currentStars--;
 				break;
-		case 14 :
+		case 18 :
 				stars[1].className = 'fa fa-star-o';
 				currentStars--;
 				break;
-		case 18 :
-				stars[0].className = 'fa fa-star-o';
-				currentStars--;
 	}
 }
 
 function endGame(){
+	// get a link to elements
 	const endGameScreen = document.querySelector('.end-game-screen');
 	const endGameReplay = document.querySelector('.play-again');
 	const endGameMoves = document.querySelector('.moves-results');
