@@ -124,7 +124,7 @@ html {
      background: white;
      margin: 0 auto;
 }
- .congrats-message, .end-game-stats {
+ .congrats-message, .end-game-stats, .end-game-time-message {
      text-align: center;
 }
  .play-again {

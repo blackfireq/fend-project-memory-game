@@ -77,6 +77,9 @@ function shuffle(array) {
 //load game
 displayDeck();
 
+//start clock
+let startTime = performance.now()
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -94,6 +97,9 @@ function resetGame(){
 	for (var i = 0; i < totalCards; i++) {
 		deck.firstElementChild.remove();
 	}
+
+	//reset clock
+	startTime = performance.now()
 
 	//reset moves
 	updateNumOfMoves(0);
@@ -128,11 +134,16 @@ function updateStarRating(){
 }
 
 function endGame(){
+
+	//calculate time elapse during game
+	const totalTime = ((performance.now() - startTime) / 1000).toFixed(1);
+
 	// get a link to elements
 	const endGameScreen = document.querySelector('.end-game-screen');
 	const endGameReplay = document.querySelector('.play-again');
 	const endGameMoves = document.querySelector('.moves-results');
 	const endGameStars = document.querySelector('.stars-results');
+	const endGameTime = document.querySelector('.end-game-time');
 
 	//set Moves
 	endGameMoves.textContent = numOfMoves;
@@ -140,6 +151,8 @@ function endGame(){
 	endGameStars.textContent = currentStars;
 	//show end game screen
 	endGameScreen.classList.toggle('end-game-show');
+	//set time of game
+	endGameTime.textContent = totalTime;
 
 }
 
