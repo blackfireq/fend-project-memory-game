@@ -170,7 +170,7 @@ function updateNumOfMoves(num){
 //checks if the two cards match and are not the same card
 function isMatch(){
 	if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1] &&
-			openCards[0].firstElementChild.id !== openCards[1].firstElementChild.id){
+			openCards[0].id !== openCards[1].id){
 		return true;
 	}
 	return false;
@@ -258,7 +258,7 @@ document.querySelector('.deck').addEventListener('click', function(event){
 	//check if the element clicked is one of the cards
 	if(event.target.nodeName === 'LI' || event.target.nodeName === 'I'){
 		//check if is not a matched card
-		if(!event.target.classList.contains('match')){
+		if(!event.target.classList.contains('show')){
 			//add card to list
 		 	let currentCard = setCurrentCard(event);
 		 	addCardToList(currentCard);
