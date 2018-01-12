@@ -201,7 +201,8 @@ function incorrectMatch(){
 }
 
 function isMatch(){
-	if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]){
+	if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1] &&
+			openCards[0].firstElementChild.id !== openCards[1].firstElementChild.id){
 		return true;
 	}
 	return false;
@@ -241,33 +242,39 @@ function setCurrentCard(event){
 }
 
 document.querySelector('.deck').addEventListener('click', function(event){
+	//check if the element clicked is one of the cards
 	if(event.target.nodeName === 'LI' || event.target.nodeName === 'I'){
-		//add card to list
-	 	let currentCard = setCurrentCard(event);
-	 	addCardToList(currentCard);
+		//check if is not a matched card
+		if(!event.target.classList.contains('match')){
+			//add card to list
+		 	let currentCard = setCurrentCard(event);
+		 	addCardToList(currentCard);
 
-		//reveal card
-	 	toggleCard(currentCard);
+			//reveal card
+		 	toggleCard(currentCard);
 
-	 	// check if card it's the second card, if so check if it matches to firstcard
-	 	if (openCards.length === 2) {
-			guard.classList.add('show-guard');
+		 	// check if card it's the second card, if so check if it matches to firstcard
+		 	if (openCards.length === 2) {
+					guard.classList.add('show-guard');
 
-			setTimeout(function (){
-				isMatch() ? correctMatch() : incorrectMatch() ;
+					//check if its a match
+					setTimeout(function (){
+					isMatch() ? correctMatch() : incorrectMatch() ;
 
-				//update number of moves
-		 		updateNumOfMoves(1);
-				updateStarRating();
-				//check if game is won
-				if (isGameOver()){ endGame();}
-		 		//clear card holder
-		 		openCards = [];
-			}, 600);
+					//update number of moves
+			 		updateNumOfMoves(1);
+					updateStarRating();
 
-			setTimeout(function(){guard.classList.remove('show-guard');},600);
-	 	}
+					//check if game is won
+					if (isGameOver()){ endGame();}
+			 		//clear card holder
 
+					openCards = [];
+				}, 600);
+
+				setTimeout(function(){guard.classList.remove('show-guard');},600);
+		 	}
+		}
 	}
  });
 
