@@ -28,7 +28,7 @@ function createDeck() {
 		deck.push(card);
 	}
 
-	// add symbols to cards
+	//add symbols to cards
 	setSymbols(deck);
 
 	//shuffle cards
@@ -57,8 +57,7 @@ function displayDeck(){
  	});
  }
 
-
-// Shuffle function from http://stackoverflow.com/a/2450976
+//Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     let currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -72,7 +71,6 @@ function shuffle(array) {
 
     return array;
 }
-
 
 //load game
 displayDeck();
@@ -91,6 +89,120 @@ let startTime = performance.now()
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
+//checks which element is click if child set card to parent
+function setCurrentCard(event){
+
+ 	if (event.target.nodeName === 'LI'){
+  		return event.target;
+
+  	} else if (event.target.nodeName == 'I'){
+  		return event.target.parentElement;
+
+  	}
+ }
+
+//adds the card clicked to the card array
+function addCardToList(card){
+ 	 openCards.push(card);
+  }
+
+//used to set the symbols on the cards
+function setSymbols(cards){
+		//list of current symbols
+		const cardSymbols = [
+			'fa-diamond',
+			'fa-paper-plane-o',
+			'fa-anchor',
+			'fa-bolt',
+			'fa-cube',
+			'fa-bomb',
+			'fa-leaf',
+			'fa-bicycle'
+		];
+
+		let symbolPosition = 0;
+		let currentChild;
+
+		//loop through cars and assign symbols
+		cards.forEach(function(card){
+			currentChild = card.firstElementChild;
+			currentChild.setAttribute('class', 'fa ' + cardSymbols[symbolPosition] );
+			symbolPosition++;
+
+			if(symbolPosition === cardSymbols.length){
+				symbolPosition = 0;
+			}
+		});
+		return cards;
+	}
+
+//used to flip the card
+function toggleCard(card){
+		card.classList.toggle('flip-card');
+	 	card.classList.toggle('open');
+	 	card.classList.toggle('show');
+
+	 }
+
+//used to update the star rating
+function updateStarRating(){
+	const stars = document.querySelectorAll('.stars i');
+
+	switch (numOfMoves){
+
+		case 12 :
+				stars[2].className = 'fa fa-star-o';
+				currentStars--;
+				break;
+		case 18 :
+				stars[1].className = 'fa fa-star-o';
+				currentStars--;
+				break;
+	}
+}
+
+//used to update the number of moves tracked
+function updateNumOfMoves(num){
+	num !== 0 ? numOfMoves += num : numOfMoves = num ;
+ 	moveCounter.textContent = numOfMoves;
+}
+
+//checks if the two cards match and are not the same card
+function isMatch(){
+	if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1] &&
+			openCards[0].firstElementChild.id !== openCards[1].firstElementChild.id){
+		return true;
+	}
+	return false;
+}
+
+//used when the cards match
+function correctMatch(){
+	for (let i = 0; i < openCards.length; i++) {
+		openCards[i].classList.remove('open');
+		openCards[i].classList.add('match');
+
+	}
+	currentMatches++;
+}
+
+//used when the cards don't match
+function incorrectMatch(){
+	for (let i = 0; i < openCards.length; i++) {
+		toggleCard(openCards[i]);
+	}
+}
+
+//checks if all cards have been matched
+function isGameOver(){
+	if(currentMatches === totalMatches){
+ 		return true;
+ 	} else {
+ 	}
+ 	return false;
+}
+
+//resets the game
 function resetGame(){
 	//clear deck of cards
 	const deck = document.querySelector('.deck');
@@ -117,22 +229,7 @@ function resetGame(){
 	displayDeck();
 }
 
-function updateStarRating(){
-	const stars = document.querySelectorAll('.stars i');
-
-	switch (numOfMoves){
-
-		case 12 :
-				stars[2].className = 'fa fa-star-o';
-				currentStars--;
-				break;
-		case 18 :
-				stars[1].className = 'fa fa-star-o';
-				currentStars--;
-				break;
-	}
-}
-
+//gathers the info and diplays the results of the game.
 function endGame(){
 
 	//calculate time elapse during game
@@ -156,91 +253,7 @@ function endGame(){
 
 }
 
-function addCardToList(card){
-	 openCards.push(card);
- }
-
-function setSymbols(cards){
-	const cardSymbols = [
-		'fa-diamond',
-		'fa-paper-plane-o',
-		'fa-anchor',
-		'fa-bolt',
-		'fa-cube',
-		'fa-bomb',
-		'fa-leaf',
-		'fa-bicycle'
-	];
-
-	let symbolPosition = 0;
-
-	let currentChild;
-	cards.forEach(function(card){
-		currentChild = card.firstElementChild;
-		currentChild.setAttribute('class', 'fa ' + cardSymbols[symbolPosition] );
-		symbolPosition++;
-
-		if(symbolPosition === cardSymbols.length){
-			symbolPosition = 0;
-		}
-	});
-	return cards;
-}
-
-function toggleCard(card){
-	card.classList.toggle('flip-card');
- 	card.classList.toggle('open');
- 	card.classList.toggle('show');
-
- }
-
-function incorrectMatch(){
-	for (let i = 0; i < openCards.length; i++) {
-		toggleCard(openCards[i]);
-	}
-}
-
-function isMatch(){
-	if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1] &&
-			openCards[0].firstElementChild.id !== openCards[1].firstElementChild.id){
-		return true;
-	}
-	return false;
-}
-
-function correctMatch(){
-	for (let i = 0; i < openCards.length; i++) {
-		openCards[i].classList.remove('open');
-		openCards[i].classList.add('match');
-
-	}
-	currentMatches++;
-}
-
-function updateNumOfMoves(num){
-	num !== 0 ? numOfMoves += num : numOfMoves = num ;
- 	moveCounter.textContent = numOfMoves;
-}
-
-function isGameOver(){
-	if(currentMatches === totalMatches){
- 		return true;
- 	} else {
- 	}
- 	return false;
-}
-
-function setCurrentCard(event){
-
-	if (event.target.nodeName === 'LI'){
- 		return event.target;
-
- 	} else if (event.target.nodeName == 'I'){
- 		return event.target.parentElement;
-
- 	}
-}
-
+//selects the card and checks for a match
 document.querySelector('.deck').addEventListener('click', function(event){
 	//check if the element clicked is one of the cards
 	if(event.target.nodeName === 'LI' || event.target.nodeName === 'I'){
@@ -278,10 +291,12 @@ document.querySelector('.deck').addEventListener('click', function(event){
 	}
  });
 
+//used to restart the game
 document.querySelector('.restart').addEventListener('click', function(event){
 	resetGame();
 });
 
+//used to restart the game
 document.querySelector('.play-again').addEventListener('click', function(){
 	const endGameScreen = document.querySelector('.end-game-screen');
 	endGameScreen.classList.toggle('end-game-show');
