@@ -9,6 +9,8 @@ const timeMinutes = document.querySelector(".minutes");
 let totalSeconds = 0;
 let openCards = [];
 let guard = document.querySelector('.guard-screen');
+let startClock = true;
+let clock;
 
 /*
  * Create a list that holds all of your cards
@@ -77,9 +79,6 @@ function shuffle(array) {
 
 //load game
 displayDeck();
-
-//start clock
-setInterval(setTime, 1000);
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -187,6 +186,22 @@ function updateNumOfMoves(num){
  	moveCounter.textContent = numOfMoves;
 }
 
+//reset clock
+function updateClock(){
+	if (startClock){
+		clock = setInterval(setTime, 1000);
+		startClock = false;
+	} else{
+		//stop clock
+		clearInterval(clock);
+		totalSeconds = 0;
+		startClock = true;
+
+		//set display to 00 mins and 00 secs
+		timeSeconds.textContent = '00';
+		timeMinutes.textContent = '00';
+	}
+}
 //checks if the two cards match and are not the same card
 function isMatch(){
 	if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1] &&
@@ -231,9 +246,7 @@ function resetGame(){
 	}
 
 	//reset clock
-	totalSeconds = 0;
-	setInterval(setTime, 1000);
-
+	updateClock();
 
 	//reset moves
 	updateNumOfMoves(0);
@@ -255,7 +268,6 @@ function resetGame(){
 function endGame(){
 
 	//calculate time elapse during game
-	clearInterval(setTime);
 	let timeSeconds = document.querySelector('.seconds').textContent;
 	let timeMinutes = document.querySelector('.minutes').textContent;
 
@@ -285,6 +297,10 @@ document.querySelector('.deck').addEventListener('click', function(event){
 	if(event.target.nodeName === 'LI' || event.target.nodeName === 'I'){
 		//check if is not a matched card
 		if(!event.target.classList.contains('show')){
+			if(startClock){
+				//start clock
+				updateClock();
+			}
 			//add card to list
 		 	let currentCard = setCurrentCard(event);
 		 	addCardToList(currentCard);
