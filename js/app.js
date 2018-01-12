@@ -4,6 +4,9 @@ let currentMatches = 0;
 let numOfMoves = 0;
 let currentStars = 3;
 const moveCounter = document.querySelector('.moves');
+const timeSeconds = document.querySelector(".seconds");
+const timeMinutes = document.querySelector(".minutes");
+let totalSeconds = 0;
 let openCards = [];
 let guard = document.querySelector('.guard-screen');
 
@@ -76,7 +79,7 @@ function shuffle(array) {
 displayDeck();
 
 //start clock
-let startTime = performance.now()
+setInterval(setTime, 1000);
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -88,6 +91,23 @@ let startTime = performance.now()
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+//updates the time display
+function setTime() {
+  ++totalSeconds;
+  timeSeconds.textContent = padTime(totalSeconds % 60);
+  timeMinutes.textContent = padTime(parseInt(totalSeconds / 60));
+}
+
+//used to format the time
+function padTime(currentTime) {
+  let timeString = currentTime + "";
+  if (timeString.length < 2) {
+    return "0" + timeString;
+  } else {
+    return timeString;
+  }
+}
 
 //checks which element is click if child set card to parent
 function setCurrentCard(event){
@@ -211,7 +231,9 @@ function resetGame(){
 	}
 
 	//reset clock
-	startTime = performance.now()
+	totalSeconds = 0;
+	setInterval(setTime, 1000);
+
 
 	//reset moves
 	updateNumOfMoves(0);
@@ -233,14 +255,17 @@ function resetGame(){
 function endGame(){
 
 	//calculate time elapse during game
-	const totalTime = ((performance.now() - startTime) / 1000).toFixed(1);
+	clearInterval(setTime);
+	let timeSeconds = document.querySelector('.seconds').textContent;
+	let timeMinutes = document.querySelector('.minutes').textContent;
 
 	// get a link to elements
 	const endGameScreen = document.querySelector('.end-game-screen');
 	const endGameReplay = document.querySelector('.play-again');
 	const endGameMoves = document.querySelector('.moves-results');
 	const endGameStars = document.querySelector('.stars-results');
-	const endGameTime = document.querySelector('.end-game-time');
+	const endGameSeconds = document.querySelector('.end-game-seconds');
+	const endGameMinutes = document.querySelector('.end-game-minutes');
 
 	//set Moves
 	endGameMoves.textContent = numOfMoves;
@@ -249,7 +274,8 @@ function endGame(){
 	//show end game screen
 	endGameScreen.classList.toggle('end-game-show');
 	//set time of game
-	endGameTime.textContent = totalTime;
+	endGameSeconds.textContent = timeSeconds;
+	endGameMinutes.textContent = timeMinutes;
 
 }
 
